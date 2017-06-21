@@ -20,11 +20,16 @@ homeassistant:
 # Enables configuration UI
 config:
 
+zwave:
+  usb_path: /dev/zwave
+
 http:
   # Uncomment this to add a password (recommended!)
   api_password: !secret api_password
   # Uncomment this if you are using SSL or running in Docker etc
-  # base_url: example.duckdns.org:8123
+  base_url: security.cribbstechnologies.com
+  # ssl_certificate: !secret fullchain_location
+  # ssl_key: !secret private_key_location
 
 # Checks for available updates
 # Note: This component will send some information about your system to
@@ -59,8 +64,8 @@ tts:
 group: !include groups.yaml
 automation: !include automations.yaml
 
-vera:
-  vera_controller_url: !secret vera_host
+#vera:
+#  vera_controller_url: !secret vera_host
   
 emulated_hue:
   type: google_home
