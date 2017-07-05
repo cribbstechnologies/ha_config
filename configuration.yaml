@@ -11,6 +11,8 @@ homeassistant:
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: America/New_York
 
+  customize: !include customize.yaml
+  packages: !include_dir_named packages
 # Show links to resources in log and frontend
 #introduction:
 
@@ -20,16 +22,26 @@ homeassistant:
 # Enables configuration UI
 config:
 
+mqtt:
+  broker: !secret mqtt_broker
+  port: !secret mqtt_port
+  client_id: !secret mqtt_client_id
+  keepalive: 60
+  username: !secret mqtt_user
+  password: !secret mqtt_password
+
+
 zwave:
-  usb_path: /dev/zwave
+  usb_path: !secret zwave_device_path
+  new_entity_ids: true
 
 http:
   # Uncomment this to add a password (recommended!)
   api_password: !secret api_password
   # Uncomment this if you are using SSL or running in Docker etc
-  base_url: security.cribbstechnologies.com
-  # ssl_certificate: !secret fullchain_location
-  # ssl_key: !secret private_key_location
+  base_url: !secret base_url
+  ssl_certificate: !secret fullchain_location
+  ssl_key: !secret private_key_location
 
 # Checks for available updates
 # Note: This component will send some information about your system to
@@ -39,7 +51,7 @@ http:
 updater:
 
 # Discover some devices automatically
-discovery:
+# discovery:
 
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
@@ -64,14 +76,23 @@ tts:
 group: !include groups.yaml
 automation: !include automations.yaml
 
-#vera:
-#  vera_controller_url: !secret vera_host
   
-emulated_hue:
-  type: google_home
-  listen_port: !secret emulated_hue_gh_port
-  host_ip: !secret emulated_hue_host
-emulated_hue a:
-  type: alexa
-  listen_port: !secret emulated_hue_alexa_port
-  host_ip: !secret emulated_hue_host
+# emulated_hue:
+#   listen_port: !secret emulated_hue_gh_port
+#   host_ip: !secret emulated_hue_host
+
+device_tracker:
+  # - platform: nmap_tracker
+  #   hosts: !secret device_tracker_hosts
+  #   home_interval: 10
+  #   track_new_devices: false
+  - platform: asuswrt
+    host: !secret asus_host_ip
+    username: !secret asus_username
+    password: !secret asus_password
+    mode: ap
+
+media_player:
+  - platform: roku
+    host: !secret bedroom_roku_host
+  - platform: plex

@@ -5,3 +5,10 @@ tts/
 home-assistant.log
 home-assistant_v2.db
 deps/
+*.xml
+known_devices.yaml
+emulated_hue_ids.json
+plex.conf
+*.sqlite
+*.txt
+*.swp

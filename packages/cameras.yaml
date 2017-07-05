@@ -1,0 +1,10 @@
+group:
+  cameras:
+    icon: mdi:video
+    view: true
+    entities:
+      - camera.front_door
+      - camera.driveway
+      - camera.back_yard
+      - camera.left_side
+      - camera.right_side

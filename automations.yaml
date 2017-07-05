@@ -1,1 +1,68 @@
-[]
+# - id: front_floods_on_dusk
+#   alias: Front Floods On Dusk
+#   initial_state: True
+#   trigger:
+#     platform: sun
+#     event: sunset
+#     offset: '-00:45:00'
+#   action:
+#     service: switch.turn_on
+#     entity_id: switch.driveway_flood_lights_switch
+# - id: front_floods_off_dawn
+#   alias: Front Floods Off Dawn
+#   initial_state: True
+#   trigger:
+#     platform: sun
+#     event: sunrise
+#     offset: '01:00:00'
+#   action:
+#     service: switch.turn_off
+#     entity_id: switch.driveway_flood_lights_switch
+- id: welcome_brian
+  alias: Welcome Home Brian
+  initial_state: True
+  trigger:
+    platform: state
+    entity_id: device_tracker.brian
+    from: 'not_home'
+    to: 'home'
+    for:
+      minutes: 2
+  action:
+    service: script.turn_on
+    entity_id: script.welcome_home_brian
+- id: welcome_brian
+  alias: Welcome Home Christina
+  initial_state: True
+  trigger:
+    platform: state
+    entity_id: device_tracker.christina
+    from: 'not_home'
+    to: 'home'
+    for:
+      minutes: 2
+  action:
+    service: script.turn_on
+    entity_id: script.welcome_home_christina
+# - id: blinds_open_am
+#   alias: Blinds open after sunrise
+#   initial_state: True
+#   trigger:
+#     platform: sun
+#     event: sunrise
+#     offset: '00:45:00'
+#   action:
+#     service: cover.open_cover_tilt
+#     entity_id: cover.living_room
+# - id: blinds_close_pm
+#   alias: Blinds close in afternoon
+#   initial_state: True
+#   trigger:
+#     platform: numeric_state
+#     entity_id: sun.sun
+#     value_template: '{{state.attributes.elevation}}'
+#     below: 57
+#   action:
+#     service: cover.close_cover_tilt
+#     entity_id: cover.living_room
+

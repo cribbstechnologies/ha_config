@@ -1,0 +1,47 @@
+homeassistant:
+  customize:
+    switch.garage_light_switch:
+      friendly_name: 'Garage Light'
+    switch.driveway_flood_lights_switch:
+      friendly_name: 'Driveway Flood Lights'
+
+group:
+  garage:
+    entities:
+    - camera.left_side
+    - camera.driveway
+    - switch.garage_light_switch
+    - switch.driveway_flood_lights_switch
+    view: true
+    name: Garage
+    icon: mdi:car
+
+camera:
+  - platform: generic
+    name: 'Driveway'
+    still_image_url: !secret driveway_camera_snapshot_url
+  - platform: generic
+    name: 'Left Side'
+    still_image_url: !secret left_side_camera_snapshot_url
+
+automation:
+  - id: front_floods_on_dusk
+    alias: Front Floods On Dusk
+    initial_state: True
+    trigger:
+      platform: sun
+      event: sunset
+      offset: '-00:45:00'
+    action:
+      service: switch.turn_on
+      entity_id: switch.driveway_flood_lights_switch
+  - id: front_floods_off_dawn
+    alias: Front Floods Off Dawn
+    initial_state: True
+    trigger:
+      platform: sun
+      event: sunrise
+      offset: '01:00:00'
+    action:
+      service: switch.turn_off
+      entity_id: switch.driveway_flood_lights_switch

@@ -1,0 +1,231 @@
+homeassistant:
+  customize:
+    light.living_room_light_level:
+      haaska_hidden: false
+      friendly_name: 'Living Room Light'
+    switch.downstairs_hall_switch:
+      haaska_hidden: false
+      friendly_name: 'Downstairs Hall'
+    switch.fan_switch:
+      haaska_hidden: false
+      friendly_name: 'Fan'
+    switch.mantle_light_switch:
+      friendly_name: 'Mantle Light'
+    cover.living_room:
+      haaska_hidden: false
+      haaska_name: Living Room Blinds
+    switch.roku:
+      haaska_hidden: false
+    switch.tv:
+      haaska_hidden: false
+    media_player.receiver:
+      haaska_hidden: false
+
+group:
+  living_room:
+    view: true
+    name: Living Room
+    icon: mdi:sofa
+    entities:
+    - switch.fan_switch
+    - light.living_room_light_level
+    - switch.mantle_light_switch
+    - media_player.receiver
+    - cover.living_room
+
+media_player:
+  - platform: onkyo
+    host: !secret theater_receiver_host
+    name: receiver
+    sources:
+      video1: 'Roku'
+      cd: 'TV'
+  - platform: roku
+    host: !secret living_room_roku_host
+
+light:
+  - platform: template
+    lights:
+      theater_volume:
+        friendly_name: 'Theater Volume'
+        value_template: >-
+          {%- if is_state("media_player.receiver", "on") -%}
+                {%- if states.media_player.receiver.attributes.is_volume_muted -%}
+                        off
+                {%- else -%}
+                        on
+                {%- endif -%}
+          {%- else -%}
+            off
+          {%- endif -%}
+        turn_on:
+          service: media_player.volume_mute
+          data:
+            entity_id: media_player.receiver
+            is_volume_muted: false
+        turn_off:
+          service: media_player.volume_mute
+          data:
+            entity_id: media_player.receiver
+            is_volume_muted: true
+        set_level:
+          service: media_player.volume_set
+          data:
+            entity_id: media_player.receiver
+          data_template:
+            volume_level: '{{((brightness / 255 * 100) | int)/100}}'
+        level_template: >-
+          {%- if is_state("media_player.receiver", "on") -%}
+            {{(255 * states.media_player.receiver.attributes.volume_level) | int}}
+          {%- else -%}
+            0
+          {%- endif -%}
+
+cover:
+  - platform: mqtt
+    name: "Living Room"
+    tilt_command_topic: !secret living_room_blinds_tilt_command_topic
+    tilt_status_topic: !secret living_room_blinds_tilt_status_topic
+    tilt_closed_value: 180
+    tilt_opened_value: 80
+    device_class: 'window'
+    tilt_max: 180
+    tilt_min: 80
+    tilt_invert_state: True
+
+remote:
+  - platform: itach
+    name: Living Room
+    host: !secret living_room_itach_host
+    devices:
+      - name: TV
+        connaddr: 2
+        commands:
+          - name: "ON"
+            data: "0000 006D 0022 0002 0157 00AC 0015 0015 0015 0015 0015 0040 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0040 0015 0040 0015 0015 0015 0040 0015 0040 0015 0040 0015 0040 0015 0040 0015 0015 0015 0015 0015 0040 0015 0015 0015 0015 0015 0015 0015 0040 0015 0040 0015 0040 0015 0040 0015 0015 0015 0040 0015 0040 0015 0040 0015 0015 0015 0015 0015 0689 0157 0056 0015 0E94"
+          - name: "OFF"
+            data: "0000 006D 0022 0002 0157 00AC 0015 0015 0015 0015 0015 0040 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0040 0015 0040 0015 0015 0015 0040 0015 0040 0015 0040 0015 0040 0015 0040 0015 0040 0015 0015 0015 0040 0015 0015 0015 0015 0015 0015 0015 0040 0015 0040 0015 0015 0015 0040 0015 0015 0015 0040 0015 0040 0015 0040 0015 0015 0015 0015 0015 0689 0157 0056 0015 0E94"
+          - name: "HDMI2"
+            data: "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0689 0157 0056 0015 0E94"
+          - name: "TV Tuner"
+            data: "0000 006D 0022 0002 0157 00AC 0015 0015 0015 0015 0015 0040 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0040 0015 0040 0015 0015 0015 0040 0015 0040 0015 0040 0015 0040 0015 0040 0015 0015 0015 0040 0015 0040 0015 0015 0015 0040 0015 0015 0015 0040 0015 0040 0015 0040 0015 0015 0015 0015 0015 0040 0015 0015 0015 0040 0015 0015 0015 0015 0015 0689 0157 0056 0015 0E94"
+
+switch:
+  - platform: template
+    switches:
+      roku:
+        value_template: "{{is_state('media_player.receiver', 'on') and states.media_player.receiver.attributes.source == 'Roku'}}"
+        turn_on:
+          service: script.turn_on
+          entity_id: script.watch_roku
+        turn_off:
+          service: script.turn_on
+          entity_id: script.all_off
+      tv:
+        value_template: "{{is_state('media_player.receiver', 'on') and states.media_player.receiver.attributes.source == 'TV'}}"
+        turn_on:
+          service: script.turn_on
+          entity_id: script.watch_tv
+        turn_off:
+          service: script.turn_on
+          entity_id: script.all_off
+
+script:
+  watch_tv:
+    alias: Watch TV
+    sequence:
+      - alias: Turn TV On
+        service: remote.send_command
+        data:
+          entity_id: remote.tv
+          device: 0
+          command: 'ON'
+      - alias: Switch receiver to TV
+        service: media_player.select_source
+        data:
+          entity_id: media_player.receiver
+          source: cd
+      - delay:
+          seconds: 8
+      - alias: Switch to Tuner
+        service: remote.send_command
+        data:
+          entity_id: remote.tv
+          device: 0
+          command: 'TV Tuner'
+  watch_roku:
+    alias: Watch Roku
+    sequence:
+      - alias: Turn TV On
+        service: remote.send_command
+        data:
+          entity_id: remote.tv
+          device: 0
+          command: 'ON'
+      - alias: Turn receiver On
+        service: media_player.turn_on
+        entity_id: media_player.receiver
+      - delay:
+          seconds: 8
+      - alias: Switch to HDMI2
+        service: remote.send_command
+        data:
+          entity_id: remote.tv
+          device: 0
+          command: 'HDMI2'
+      - alias: Switch receiver to STB/DVR
+        service: media_player.select_source
+        data:
+          entity_id: media_player.receiver
+          source: video1
+  all_off:
+    alias: All Off
+    sequence:
+      - service: remote.send_command
+        data:
+          entity_id: remote.tv
+          device: 0
+          command: 'OFF'
+      - service: media_player.turn_off
+        entity_id: media_player.receiver
+  welcome_home_brian:
+    alias: Welcome Brian Home
+    sequence:
+      - service: media_player.turn_on
+        entity_id: media_player.downstairs_home
+      - service: tts.google_say
+        data_template:
+          entity_id: media_player.downstairs_home
+          message: "Welcome home Brian."
+  welcome_home_christina:
+    alias: Welcome Christina Home
+    sequence:
+      - service: media_player.turn_on
+        entity_id: media_player.downstairs_home
+      - service: tts.google_say
+        data_template:
+          entity_id: media_player.downstairs_home
+          message: "Welcome home Christina."
+
+automation:
+  - id: blinds_open_am
+    alias: Blinds open after sunrise
+    initial_state: True
+    trigger:
+      platform: sun
+      event: sunrise
+      offset: '00:45:00'
+    action:
+      service: cover.open_cover_tilt
+      entity_id: cover.living_room
+  - id: blinds_close_pm
+    alias: Blinds close in afternoon
+    initial_state: True
+    trigger:
+      platform: numeric_state
+      entity_id: sun.sun
+      value_template: '{{state.attributes.elevation}}'
+      below: 57
+    action:
+      service: cover.close_cover_tilt
+      entity_id: cover.living_room

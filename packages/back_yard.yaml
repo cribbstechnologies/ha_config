@@ -1,0 +1,31 @@
+homeassistant:
+  customize:
+    switch.deck_wall_light_switch:
+      friendly_name: 'Deck Light'
+    switch.back_yard_flood_lights_switch:
+      friendly_name: 'Back Yard Flood Lights'
+    group.back_yard_lights:
+      haaska_hidden: false
+
+group:
+  back_yard:
+    entities:
+    - switch.deck_wall_light_switch
+    - switch.back_yard_flood_lights_switch
+    - camera.back_yard
+    - camera.right_side
+    name: Back Yard
+    view: true
+  back_yard_lights:
+    name: Back Yard Lights
+    entities:
+    - switch.deck_wall_light_switch
+    - switch.back_yard_flood_lights_switch
+
+camera:
+  - platform: generic
+    name: 'Back Yard'
+    still_image_url: !secret back_yard_camera_snapshot_url
+  - platform: generic
+    name: 'Right Side'
+    still_image_url: !secret right_side_camera_snapshot_url

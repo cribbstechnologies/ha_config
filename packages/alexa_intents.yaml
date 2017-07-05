@@ -1,0 +1,54 @@
+alexa:
+  intents:
+    WhereAreWeIntent:
+      speech:
+        type: plaintext
+        text: >
+          {%- if is_state('device_tracker.brian', 'home') and
+                 is_state('device_tracker.christina', 'home') -%}
+            You are both home, you silly
+          {%- else -%}
+            Christina is at {{ states("device_tracker.christina") }}
+            and Brian is at {{ states("device_tracker.brian") }}
+          {% endif %}
+
+    LocateIntent:
+      action:
+        service: notify.notify
+        data_template:
+          message: The location of {{ User }} has been queried via Alexa.
+      speech:
+        type: plaintext
+        text: >
+          {%- for state in states.device_tracker -%}
+            {%- if state.name.lower() == User.lower() -%}
+              {{ state.name }} is at {{ state.state }}
+            {%- elif loop.last -%}
+              I am sorry, I do not know where {{ User }} is.
+            {%- endif -%}
+          {%- else -%}
+            Sorry, I don't have any trackers registered.
+          {%- endfor -%}
+    LEDIntent:
+      speech:
+        type: plaintext 
+        text: >
+          {%- if is_state('switch.counter_lights', 'on') and 
+            is_state('light.overcabinet_lights', 'on') -%}
+            All of the LED strips are on
+          {%- elif is_state('switch.counter_lights', 'on') -%}
+            The counter lights are on
+          {%- elif is_state('light.overcabinet_lights', 'on') -%}
+            The over cabinet lights are on
+          {%- else -%}
+            No Lights are on
+          {%- endif -%}
+    MediaPlayerSourceIntent:
+      action:
+        service: media_player.select_source
+        data_template:
+          entity_id: 'media_player.{{player|replace(" ", "_")|lower}}'
+          source: '{{source}}'
+      speech:
+        type: plaintext
+        text: 'OK. Changing {{player}} to {{source}}'

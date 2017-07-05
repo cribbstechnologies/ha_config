@@ -1,0 +1,83 @@
+homeassistant:
+  customize:
+    switch.kitchen_light_switch:
+      friendly_name: 'Kitchen Light'
+      haaska_hidden: false
+    switch.kitchen_entry_switch:
+      friendly_name: 'Kitchen Entry'
+      haaska_hidden: false
+    scene.cooking:
+      emulated_hue: true
+      emulated_hue_name: 'Cooking Time'
+      haaska_hidden: false
+    group.kitchen_led_strips:
+      visible: false
+      haaska_hidden: false
+    light.overcabinet_lights:
+      haaska_hidden: false
+
+group:
+  Kitchen:
+    entities:
+    - switch.kitchen_light_switch
+    - switch.kitchen_entry_switch
+    - switch.counter_lights
+    - light.overcabinet_lights
+    name: Kitchen
+    view: true
+    icon: mdi:stove
+  kitchen_led_strips:
+    entities:
+      - switch.counter_lights
+      - light.overcabinet_lights
+    name: Kitchen LED Strips
+
+scene:
+  - name: Cooking
+    entities:
+      switch.kitchen_light_switch: on
+      switch.counter_lights: on
+      light.overcabinet_lights: 
+        state: on
+        brightness: 200
+        effect: 'solid'
+        color_name: 'white'
+
+switch:
+  - platform: mqtt
+    name: "Counter Lights"
+    state_topic: !secret counter_lights_state_topic
+    command_topic: !secret counter_lights_command_topic
+    qos: 0
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+light:
+  - platform: mqtt_json
+    name: Overcabinet Lights
+    command_topic: !secret overcabinet_lights_state_topic
+    brightness: true
+    color_temp: true
+    effect: true
+    effect_list:
+      - 'solid'
+      - 'bpm'
+      - 'candy cane'
+      - 'confetti'
+      - 'cyclon rainbow'
+      - 'dots'
+      - 'fire'
+      - 'glitter'
+      - 'juggle'
+      - 'lightning'
+      - 'police all'
+      - 'police one'
+      - 'rainbow'
+      - 'glitter'
+      - 'rainbow with glitter'
+      - 'sinelon'
+      - 'twinkle'
+      - 'noise'
+      - 'ripple'
+    state_topic: !secret overcabinet_lights_command_topic
+    rgb: true

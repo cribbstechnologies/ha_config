@@ -1,0 +1,6 @@
+###
+# Lights
+###
+light.dining_room_light_level:
+  friendly_name: 'Dining Room Light'
+  haaska_hidden: false
