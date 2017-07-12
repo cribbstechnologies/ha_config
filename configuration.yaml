@@ -76,10 +76,16 @@ tts:
 group: !include groups.yaml
 automation: !include automations.yaml
 
+binary_sensor:
+  - platform: mqtt
+    state_topic: dummy/floorplan/sensor
+    name: Floorplan
+
   
-# emulated_hue:
-#   listen_port: !secret emulated_hue_gh_port
-#   host_ip: !secret emulated_hue_host
+emulated_hue:
+  listen_port: !secret emulated_hue_gh_port
+  host_ip: !secret emulated_hue_host
+  expose_by_default: false
 
 device_tracker:
   # - platform: nmap_tracker
@@ -91,8 +97,23 @@ device_tracker:
     username: !secret asus_username
     password: !secret asus_password
     mode: ap
+    track_new_devices: false
 
 media_player:
   - platform: roku
     host: !secret bedroom_roku_host
   - platform: plex
+
+influxdb:
+  host: !secret influx_host
+  port: !secret influx_port
+  username: !secret influx_username
+  password: !secret influx_password
+  database: !secret influx_database
+  exclude:
+    domains:
+      - automation
+      - configurator
+      - camera
+      - sun
+      - media_player

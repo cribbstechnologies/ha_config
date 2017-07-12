@@ -2,8 +2,10 @@ homeassistant:
   customize:
     switch.foyer_light_switch:
       friendly_name: 'Foyer Light'
+      emulated_hue: true
     switch.porch_light_switch:
       friendly_name: 'Porch Light'
+      emulated_hue: true
     sensor.foyer_temperature:
       icon: mdi:thermometer
     sensor.foyer_humidity:

@@ -2,19 +2,29 @@ homeassistant:
   customize:
     switch.kitchen_light_switch:
       friendly_name: 'Kitchen Light'
-      haaska_hidden: false
+      emulated_hue: true
     switch.kitchen_entry_switch:
       friendly_name: 'Kitchen Entry'
-      haaska_hidden: false
+      emulated_hue: true
     scene.cooking:
       emulated_hue: true
       emulated_hue_name: 'Cooking Time'
-      haaska_hidden: false
     group.kitchen_led_strips:
       visible: false
-      haaska_hidden: false
+      emulated_hue: true
     light.overcabinet_lights:
       haaska_hidden: false
+    sensor.kitchen_temperature:
+      icon: mdi:thermometer
+      haaska_hidden: false
+    sensor.kitchen_humidity:
+      icon: mdi:water-percent
+    sensor.kitchen_lux:
+      icon: mdi:lightbulb-on-outline
+    binary_sensor.kitchen_motion:
+      device_class: motion
+    sensor.kitchen_real_feel:
+      icon: mdi:thermometer
 
 group:
   Kitchen:
@@ -23,6 +33,7 @@ group:
     - switch.kitchen_entry_switch
     - switch.counter_lights
     - light.overcabinet_lights
+    - group.kitchen_sensor
     name: Kitchen
     view: true
     icon: mdi:stove
@@ -31,6 +42,20 @@ group:
       - switch.counter_lights
       - light.overcabinet_lights
     name: Kitchen LED Strips
+  floorplan:
+    entities:
+      - binary_sensor.floorplan
+    name: Floorplan
+    control: hidden
+  kitchen_sensor:
+    name: Kitchen Sensor
+    control: hidden
+    entities: 
+    - sensor.kitchen_temperature
+    - sensor.kitchen_humidity
+    - sensor.kitchen_real_feel
+    - sensor.kitchen_lux
+    - binary_sensor.kitchen_motion
 
 scene:
   - name: Cooking
@@ -56,8 +81,7 @@ light:
   - platform: mqtt_json
     name: Overcabinet Lights
     command_topic: !secret overcabinet_lights_state_topic
-    brightness: true
-    color_temp: true
+    state_topic: !secret overcabinet_lights_command_topic
     effect: true
     effect_list:
       - 'solid'
@@ -79,5 +103,38 @@ light:
       - 'twinkle'
       - 'noise'
       - 'ripple'
-    state_topic: !secret overcabinet_lights_command_topic
+    brightness: true
+    color_temp: true
+    flash: true
     rgb: true
+    retain: true
+
+sensor:
+  - platform: mqtt
+    state_topic: !secret kitchen_sensor_state_topic
+    name: Kitchen Humidity
+    unit_of_measurement: '%'
+    value_template: '{{value_json.hum | round(1)}}'
+  - platform: mqtt
+    state_topic: !secret kitchen_sensor_state_topic
+    name: Kitchen Temperature
+    unit_of_measurement: 'F'
+    value_template: '{{value_json.temp | round(1)}}'
+  - platform: mqtt
+    state_topic: !secret kitchen_sensor_state_topic
+    name: Kitchen Lux
+    unit_of_measurement: 'LUX'
+    value_template: '{{value_json.ldr}}'
+  - platform: mqtt
+    state_topic: !secret kitchen_sensor_state_topic
+    name: Kitchen Real Feel
+    unit_of_measurement: 'F'
+    value_template: '{{value_json.htIdx | round(1)}}'
+
+binary_sensor:
+  - platform: mqtt
+    name: Kitchen Motion
+    state_topic: !secret kitchen_sensor_state_topic
+    value_template: '{{value_json.motion}}'
+    payload_on: 'motion detected'
+    payload_off: 'standby'

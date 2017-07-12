@@ -1,0 +1,26 @@
+name: Floorplan Test
+image: /local/custom_ui/floorplan/floorplanV1Test.svg
+stylesheet: /local/custom_ui/floorplan/floorplan.css
+
+groups:
+  - name: Switches
+    entities:
+      - switch.kitchen_entry_switch
+      - switch.kitchen_light_switch
+    states:
+      - state: 'on'
+        class: 'light-on'
+      - state: 'off'
+        class: 'light-off'
+    action:
+      service: toggle
+  - name: Lights
+    entities:
+      - light.overcabinet_lights
+    states:
+      - state: 'on'
+        class: 'light-on'
+      - state: 'off'
+        class: 'light-off'
+    action:
+      service: toggle
