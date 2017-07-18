@@ -1,0 +1,14 @@
+homeassistant:
+  customize:
+    fan.office_fan_level:
+      friendly_name: Office Fan
+    fan.office_light_switch:
+      friendly_name: Office Light
+
+group:
+  office:
+    view: true
+    name: Office
+    entities: 
+      - fan.office_fan_level
+      - switch.office_light_switch

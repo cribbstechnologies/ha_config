@@ -1,0 +1,21 @@
+homeassistant:
+  customize:
+    sensor.pihole_ads_percentage_blocked_today:
+      friendly_name: Ad % Blocked Today
+    sensor.pihole_ads_blocked_today:
+      friendly_name: Ads Blocked Today
+
+sensor:
+  - platform: pi_hole
+    host: !secret pi_hole_host
+    monitored_conditions:
+      - ads_blocked_today
+      - ads_percentage_today
+
+group:
+  pi_hole:
+    name: Pi Hole
+    control: hidden
+    entities:
+      - sensor.pihole_ads_blocked_today
+      - sensor.pihole_ads_percentage_blocked_today

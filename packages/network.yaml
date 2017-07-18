@@ -1,0 +1,7 @@
+group:
+  network:
+    name: network
+    icon: mdi:network
+    view: true
+    entities:
+      - group.pi_hole

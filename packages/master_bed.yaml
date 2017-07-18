@@ -1,0 +1,6 @@
+group:
+  master_bed:
+    name: Master Bed
+    view: true
+    entities:
+      - switch.bedroom_lamp

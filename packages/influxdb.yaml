@@ -1,0 +1,13 @@
+influxdb:
+  host: !secret influx_host
+  port: !secret influx_port
+  username: !secret influx_username
+  password: !secret influx_password
+  database: !secret influx_database
+  exclude:
+    domains:
+      - automation
+      - configurator
+      - camera
+      - sun
+      - media_player

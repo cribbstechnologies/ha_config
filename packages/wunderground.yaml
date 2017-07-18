@@ -1,0 +1,21 @@
+group:
+  wunderground:
+    name: Wunderground
+    entities:
+      - sensor.pws_alerts
+      - sensor.pws_feelslike_f
+      - sensor.pws_temp_f
+      - sensor.pws_heat_index_f
+      - sensor.pws_observation_time
+      - sensor.pws_relative_humidity
+
+sensor:
+  - platform: wunderground
+    api_key: !secret wunder_api_key
+    monitored_conditions:
+      - alerts
+      - feelslike_f
+      - heat_index_f
+      - observation_time
+      - relative_humidity
+      - temp_f

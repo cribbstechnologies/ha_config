@@ -1,0 +1,10 @@
+switch:
+  - platform: tplink
+    host: !secret master_bath_tp_link
+    name: Bathroom Outlet
+  - platform: tplink
+    host: !secret bedroom_lamp_tp_link
+    name: Bedroom Lamp
+  - platform: tplink
+    host: !secret salt_lamp_tp_link
+    name: Salt Lamp

@@ -1,0 +1,7 @@
+mqtt:
+  broker: !secret mqtt_broker
+  port: !secret mqtt_port
+  client_id: !secret mqtt_client_id
+  keepalive: 60
+  username: !secret mqtt_user
+  password: !secret mqtt_password
