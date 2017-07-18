@@ -3,10 +3,28 @@ image: /local/custom_ui/floorplan/floorplanV1Test.svg
 stylesheet: /local/custom_ui/floorplan/floorplan.css
 
 groups:
+  - name: doorbell
+    entities:
+      - switch.doorbell_ring
+    states:
+      - state: 'on'
+        class: 'doorbell-on'
+      - state: 'off'
+        class: 'doorbell-off'
+    action:
+      service: toggle
   - name: Switches
     entities:
       - switch.kitchen_entry_switch
       - switch.kitchen_light_switch
+      - switch.downstairs_hall_switch
+      - switch.mantle_light_switch
+      - switch.foyer_light_switch
+      - switch.porch_light_switch
+      - switch.deck_wall_light_switch
+      - switch.back_yard_flood_lights_switch
+      - fan.fan_level
+      - switch.living_room_blinds
     states:
       - state: 'on'
         class: 'light-on'
@@ -17,6 +35,8 @@ groups:
   - name: Lights
     entities:
       - light.overcabinet_lights
+      - light.living_room_light_level
+      - light.dining_room_light_level
     states:
       - state: 'on'
         class: 'light-on'
@@ -24,3 +44,24 @@ groups:
         class: 'light-off'
     action:
       service: toggle
+  - name: Binary Sensors
+    entities:
+      - binary_sensor.kitchen_motion
+      - binary_sensor.foyer_motion
+    states:
+      - state: 'off'
+        class: 'info-background'
+      - state: 'on'
+        class: 'danger-background'
+    state_transitions:
+      - name: On to off
+        from_state: 'on'
+        to_state: 'off'
+        duration: 10
+  - name: Cameras
+    entities:
+      - camera.front_door
+      - camera.driveway
+      - camera.left_side
+      - camera.back_yard
+      - camera.right_side

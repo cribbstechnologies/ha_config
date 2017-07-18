@@ -22,18 +22,17 @@ homeassistant:
 # Enables configuration UI
 config:
 
-mqtt:
-  broker: !secret mqtt_broker
-  port: !secret mqtt_port
-  client_id: !secret mqtt_client_id
-  keepalive: 60
-  username: !secret mqtt_user
-  password: !secret mqtt_password
-
+panel_custom:
+  - name: floorplan
+    sidebar_title: Floorplan
+    sidebar_icon: mdi:security-home
+    url_path: floorplan
+    config: !include floorplan.yaml
 
 zwave:
   usb_path: !secret zwave_device_path
   new_entity_ids: true
+  network_key: !secret zwave_network_key
 
 http:
   # Uncomment this to add a password (recommended!)
@@ -80,7 +79,6 @@ binary_sensor:
   - platform: mqtt
     state_topic: dummy/floorplan/sensor
     name: Floorplan
-
   
 emulated_hue:
   listen_port: !secret emulated_hue_gh_port
@@ -103,17 +101,5 @@ media_player:
   - platform: roku
     host: !secret bedroom_roku_host
   - platform: plex
-
-influxdb:
-  host: !secret influx_host
-  port: !secret influx_port
-  username: !secret influx_username
-  password: !secret influx_password
-  database: !secret influx_database
-  exclude:
-    domains:
-      - automation
-      - configurator
-      - camera
-      - sun
-      - media_player
+  - platform: cast
+    host: !secret downstairs_google_home_host

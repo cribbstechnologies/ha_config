@@ -16,6 +16,11 @@ homeassistant:
       device_class: motion
     sensor.foyer_real_feel:
       icon: mdi:thermometer
+    lock.front_door_locked:
+      friendly_name: 'Lock Status'
+      emulated_hue: true
+    sensor.front_door_lock_battery:
+      friendly_name: Battery Level
 
 group:
   foyer:
@@ -24,8 +29,21 @@ group:
     - switch.porch_light_switch
     - camera.front_door
     - group.foyer_sensor
+    - group.front_door_lock
     view: true
     name: Foyer
+  front_door_lock:
+    name: Front Door Lock
+    entities:
+      - lock.front_door_locked
+      - sensor.front_door_lock_battery
+      - sensor.front_door_access_control
+      - sensor.front_door_alarm_level
+      - sensor.front_door_alarm_type
+      - sensor.front_door_burglar
+      - sensor.front_door_power_management
+      - sensor.front_door_sourcenodeid
+      - sensor.front_door_system
   foyer_sensor:
     name: Foyer Sensor
     control: hidden
@@ -67,6 +85,11 @@ sensor:
     name: Foyer Real Feel
     unit_of_measurement: 'F'
     value_template: '{{value_json.heatIndex | round(1)}}'
+  - platform: template
+    sensors:
+      front_door_lock_battery:
+        value_template: '{{states.zwave.front_door.attributes.battery_level}}'
+        unit_of_measurement: '%'
 
 binary_sensor:
   - platform: mqtt

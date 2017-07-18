@@ -6,7 +6,7 @@ homeassistant:
     switch.downstairs_hall_switch:
       emulated_hue: true
       friendly_name: 'Downstairs Hall'
-    switch.fan_switch:
+    fan.fan_level:
       emulated_hue: true
       friendly_name: 'Fan'
     switch.mantle_light_switch:
@@ -32,11 +32,15 @@ group:
     name: Living Room
     icon: mdi:sofa
     entities:
-    - switch.fan_switch
+    - fan.fan_level
     - light.living_room_light_level
     - switch.mantle_light_switch
     - media_player.receiver
     - cover.living_room
+    - media_player.living_room
+
+fan:
+ - platform: zwave
 
 media_player:
   - platform: onkyo
@@ -143,6 +147,14 @@ switch:
         turn_off:
           service: script.turn_on
           entity_id: script.all_off
+      living_room_blinds:
+        value_template: "{{states.cover.living_room.attributes.current_tilt_position >= 100}}"
+        turn_on:
+          service: cover.open_cover_tilt
+          entity_id: cover.living_room
+        turn_off:
+          service: cover.close_cover_tilt
+          entity_id: cover.living_room
       
 
 script:
@@ -211,6 +223,15 @@ script:
           command: 'OFF'
       - service: media_player.turn_off
         entity_id: media_player.receiver
+  welcome_home:
+    alias: Welcome Home Generic
+    sequence:
+      - service: media_player.turn_on
+        entity_id: media_player.downstairs_home
+      - service: tts.google_say
+        data_template:
+          entity_id: media_player.downstairs_home
+          message: "Welcome home {{user}}."
   welcome_home_brian:
     alias: Welcome Brian Home
     sequence:

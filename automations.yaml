@@ -31,7 +31,21 @@
   action:
     service: script.turn_on
     entity_id: script.welcome_home_brian
-- id: welcome_brian
+    data:
+      variables:
+        user: Brian
+- id: dont_burn_the_house_down
+  alias: "Don't burn the house down"
+  initial_state: True
+  trigger:
+    platform: state
+    entity_id: device_tracker.christina
+    from: 'home'
+    to: 'not_home'
+  action:
+    service: switch.turn_off
+    entity_id: switch.bathroom_outlet
+- id: welcome_christina
   alias: Welcome Home Christina
   initial_state: True
   trigger:
