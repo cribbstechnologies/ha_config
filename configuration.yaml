@@ -79,6 +79,9 @@ binary_sensor:
   - platform: mqtt
     state_topic: dummy/floorplan/sensor
     name: Floorplan
+
+fan:
+ - platform: zwave
   
 emulated_hue:
   listen_port: !secret emulated_hue_gh_port

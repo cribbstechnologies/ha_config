@@ -1,6 +1,22 @@
+homeassistant:
+  customize:
+    light.master_bed_light_level:
+      friendly_name: Master Bed Light
+    switch.master_bath_vanity_switch:
+      friendly_name: Master Bath Vanity Lights
+    switch.master_shower_light_switch:
+      friendly_name: Master Bath Shower Light
+    fan.master_bed_fan_level:
+      friendly_name: Master Bed Fan
+
 group:
   master_bed:
     name: Master Bed
     view: true
     entities:
       - switch.bedroom_lamp
+      - light.master_bed_light_level
+      - light.master_bath_light_level
+      - switch.master_bath_vanity_switch
+      - switch.master_shower_light_switch
+      - fan.master_bed_fan_level

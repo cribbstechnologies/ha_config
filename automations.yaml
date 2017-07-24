@@ -29,11 +29,9 @@
     for:
       minutes: 2
   action:
-    service: script.turn_on
-    entity_id: script.welcome_home_brian
-    data:
-      variables:
-        user: Brian
+    service: script.welcome_home
+    data_template:
+      user: 'Brian'
 - id: dont_burn_the_house_down
   alias: "Don't burn the house down"
   initial_state: True

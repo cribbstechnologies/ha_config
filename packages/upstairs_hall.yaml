@@ -4,6 +4,7 @@ group:
     name: Upstairs Hall
     entities:
       - switch.salt_lamp
+      - switch.upstairs_hall_switch
 
 automation:
   - id: salt_lamp_on_dusk
