@@ -1,0 +1,21 @@
+zwave:
+  usb_path: !secret zwave_device_path
+  new_entity_ids: true
+  network_key: !secret zwave_network_key
+  device_config:
+    light.living_room_light_level:
+      polling_intensity: 2
+      refresh_value: true
+      delay: 3
+    light.guest_bed_light_level:
+      polling_intensity: 2
+      refresh_value: true
+      delay: 3
+    light.master_bed_light_level:
+      polling_intensity: 2
+      refresh_value: true
+      delay: 3
+    light.master_bath_light_level:
+      polling_intensity: 2
+      refresh_value: true
+      delay: 3

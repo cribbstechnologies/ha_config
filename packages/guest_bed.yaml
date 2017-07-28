@@ -1,0 +1,13 @@
+homeassistant:
+  customize:
+    light.guest_bed_light_level:
+      friendly_name: Guest Bed Light
+    fan.guest_bed_fan_level:
+      friendly_name: Guest Bed Fan
+group:
+  guest_bed:
+    view: true
+    name: Guest Bed
+    entities:
+      - light.guest_bed_light_level
+      - fan.guest_bed_fan_level

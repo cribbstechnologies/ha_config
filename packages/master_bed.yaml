@@ -6,6 +6,8 @@ homeassistant:
       friendly_name: Master Bath Vanity Lights
     switch.master_shower_light_switch:
       friendly_name: Master Bath Shower Light
+    light.master_bath_light_level:
+      friendly_name: Master Bath Light
     fan.master_bed_fan_level:
       friendly_name: Master Bed Fan
 

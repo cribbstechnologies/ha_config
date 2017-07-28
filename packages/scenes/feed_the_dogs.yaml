@@ -1,0 +1,41 @@
+homeassistant:
+  customize:
+    scene.dog_food_time:
+      emulated_hue: True
+      emulated_hue_name: 'Dog Food Time'
+
+scene:
+  - name: "Dog Food Time"
+    entities:
+      switch.upstairs_hall_switch: on
+      light.master_bed_light_level:
+        state: on
+        brightness: 255
+      input_boolean.feeding_time_active: on
+
+input_boolean:
+  feeding_time_active:
+    initial: off
+    name: Dog Feeding Time
+
+automation:
+  - id: downstairs_off_delay_dog_feeding
+    initial_state: True
+    trigger:
+      platform: state
+      entity_id: input_boolean.feeding_time_active
+      from: 'off'
+      to: 'on'
+      for:
+        minutes: 2
+    action:
+      service: script.downstairs_off_feeding_time_reset        
+        
+
+script:
+  downstairs_off_feeding_time_reset:
+    sequence:
+      - service: script.turn_on
+        entity_id: script.downstairs_off
+      - service: homeassistant.turn_off
+        entity_id: input_boolean.feeding_time_active

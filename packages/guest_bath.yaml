@@ -1,0 +1,8 @@
+group:
+  guest_bath:
+    view: true
+    name: Guest Bath
+    entities:
+      - switch.guest_bath_vanity_switch
+      - switch.guest_bath_light_switch
+      - switch.guest_bath_fan_switch

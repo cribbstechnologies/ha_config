@@ -1,0 +1,24 @@
+group:
+  downstairs_turn_off_entities:
+    entities:
+      - fan.fan_level
+      - light.living_room_light_level
+      - switch.mantle_light_switch
+      - switch.downstairs_hall_switch
+      - media_player.receiver
+      - remote.tv
+      - switch.foyer_light_switch
+      - switch.porch_light_switch
+      - group.back_yard_lights
+      - switch.garage_light_switch
+      - switch.kitchen_light_switch
+      - switch.kitchen_entry_switch
+      - switch.counter_lights
+      - light.overcabinet_lights
+      - light.dining_room_light_level
+
+script:
+  downstairs_off:
+    sequence:
+      - service: homeassistant.turn_off
+        entity_id: group.downstairs_turn_off_entities        

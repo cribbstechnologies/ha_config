@@ -29,11 +29,6 @@ panel_custom:
     url_path: floorplan
     config: !include floorplan.yaml
 
-zwave:
-  usb_path: !secret zwave_device_path
-  new_entity_ids: true
-  network_key: !secret zwave_network_key
-
 http:
   # Uncomment this to add a password (recommended!)
   api_password: !secret api_password
