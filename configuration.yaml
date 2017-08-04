@@ -79,21 +79,9 @@ fan:
  - platform: zwave
   
 emulated_hue:
-  listen_port: !secret emulated_hue_gh_port
+  listen_port: !secret emulated_hue_port
   host_ip: !secret emulated_hue_host
   expose_by_default: false
-
-device_tracker:
-  # - platform: nmap_tracker
-  #   hosts: !secret device_tracker_hosts
-  #   home_interval: 10
-  #   track_new_devices: false
-  - platform: asuswrt
-    host: !secret asus_host_ip
-    username: !secret asus_username
-    password: !secret asus_password
-    mode: ap
-    track_new_devices: false
 
 media_player:
   - platform: roku

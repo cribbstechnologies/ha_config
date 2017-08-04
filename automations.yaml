@@ -18,20 +18,26 @@
 #   action:
 #     service: switch.turn_off
 #     entity_id: switch.driveway_flood_lights_switch
-- id: welcome_brian
-  alias: Welcome Home Brian
+- id: welcome_home
+  alias: Welcome Home
   initial_state: True
   trigger:
-    platform: state
-    entity_id: device_tracker.brian
-    from: 'not_home'
-    to: 'home'
-    for:
-      minutes: 2
+    - platform: state
+      entity_id: device_tracker.brian
+      from: 'not_home'
+      to: 'home'
+      for:
+        minutes: 2
+    - platform: state
+      entity_id: device_tracker.christina
+      from: 'not_home'
+      to: 'home'
+      for:
+        minutes: 2
   action:
     service: script.welcome_home
     data_template:
-      user: 'Brian'
+      user: '{{trigger.state.friendly_name}}'
 - id: dont_burn_the_house_down
   alias: "Don't burn the house down"
   initial_state: True
@@ -43,19 +49,20 @@
   action:
     service: switch.turn_off
     entity_id: switch.bathroom_outlet
-- id: welcome_christina
-  alias: Welcome Home Christina
-  initial_state: True
-  trigger:
-    platform: state
-    entity_id: device_tracker.christina
-    from: 'not_home'
-    to: 'home'
-    for:
-      minutes: 2
-  action:
-    service: script.turn_on
-    entity_id: script.welcome_home_christina
+# - id: welcome_christina
+#   alias: Welcome Home Christina
+#   initial_state: True
+#   trigger:
+#     platform: state
+#     entity_id: device_tracker.christina
+#     from: 'not_home'
+#     to: 'home'
+#     for:
+#       minutes: 2
+#   action:
+#     service: script.welcome_home
+#     data: 
+#       user: 'Christina'
 # - id: blinds_open_am
 #   alias: Blinds open after sunrise
 #   initial_state: True

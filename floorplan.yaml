@@ -1,6 +1,7 @@
 name: Floorplan Test
 image: /local/custom_ui/floorplan/floorplanV1Test.svg
 stylesheet: /local/custom_ui/floorplan/floorplan.css
+hide_app_toolbar: 
 
 groups:
   - name: doorbell

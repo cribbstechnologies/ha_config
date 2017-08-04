@@ -1,5 +1,65 @@
 alexa:
   intents:
+    WhatCanAlexaControl:
+      speech:
+        type: plaintext
+        text: >
+          {%- if domain and domain.lower() == 'light' or domain.lower() == 'lights' -%}
+            The lights I can control are:
+            {% for state in states.light %}
+                {% if state.attributes.emulated_hue %}
+                {% if state.attributes.emulated_hue_name %}
+                  {{state.attributes.emulated_hue_name}}
+                {% else %}
+                  {{state.attributes.friendly_name}} 
+                {% endif %}
+              {% endif %}
+            {%endfor%}
+          {% elif domain and domain.lower() == 'switches' or domain.lower() == 'switch' %}
+            The switches I can control are:
+            {% for state in states.switch %}
+                {% if state.attributes.emulated_hue %}
+                {% if state.attributes.emulated_hue_name %}
+                  {{state.attributes.emulated_hue_name}}
+                {% else %}
+                  {{state.attributes.friendly_name}} 
+                {% endif %}
+              {% endif %}
+            {%endfor%}
+          {% else %}
+            I've got no clue what {{domain}} is
+          {%- endif -%}
+    IntroductionIntent:
+      speech:
+        type: plaintext
+        text: >
+          Hello! I'm Alexa. I can control various things around this house.
+          For example, I can turn on the kitchen lights.
+          Give it a shot. Say "Alexa, turn the kitchen light on".
+          There are also various buttons around the house. 
+          To find out what they control just say 
+          "Alexa, ask the house about the (read the label) button".
+          Things can also be controlled by the tablet near the garage door.
+          Pressing the picture of the item you would like to control will toggle it.
+          You can press the video cameras to get a still picture of what that camera sees.
+    DashButtonIntent:
+      speech:
+        type: plaintext
+        text: >
+          {%- if button_name.lower() == 'milkbone' or button_name.lower() == 'milk bone' -%}
+            This button controls the irrigation system in the back yard. 
+            It's meant to be used after the dogs come in from using the bathroom to dilute the urine so the grass doesn't burn.
+          {%- elif button_name.lower() == 'starbucks doubleshot' -%}
+            This button helps start the day. It turns on the lights in the back yard, and a few lights downstairs to help get the dogs outside.
+          {%- elif button_name.lower() == 'on' -%}
+            This button turns off all of the lights in the house that aren't associated with automations.
+          {%- else -%}
+            I don't know about the {{button_name}} button
+          {%- endif -%}
+      # card:
+      #   type: simple
+      #   title: Asked {{button_name}}
+      #   content: Tell users what to do when {{button_name}} pressed
     WhereAreWeIntent:
       speech:
         type: plaintext

@@ -1,0 +1,18 @@
+homeassistant:
+  customize:
+    device_tracker.brian:
+      friendly_name: Brian
+    device_tracker.christina:
+      friendly_name: Christina
+
+device_tracker:
+  # - platform: nmap_tracker
+  #   hosts: !secret device_tracker_hosts
+  #   home_interval: 10
+  #   track_new_devices: false
+  - platform: asuswrt
+    host: !secret asus_host_ip
+    username: !secret asus_username
+    password: !secret asus_password
+    mode: ap
+    track_new_devices: false

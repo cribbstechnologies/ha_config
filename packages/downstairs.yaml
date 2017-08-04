@@ -16,6 +16,7 @@ group:
       - switch.counter_lights
       - light.overcabinet_lights
       - light.dining_room_light_level
+      - scene.dog_food_time
 
 script:
   downstairs_off:
