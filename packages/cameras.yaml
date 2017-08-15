@@ -3,8 +3,41 @@ group:
     icon: mdi:video
     view: true
     entities:
-      - camera.front_door
+      - group.driveway_camera_group
+      - group.front_door_camera_group
+      - group.back_yard_camera_group
+      - group.left_side_camera_group
+      - group.right_side_camera_group
+
+  driveway_camera_group:
+    entities:
       - camera.driveway
+  front_door_camera_group:
+    entities:
+      - camera.front_door
+  back_yard_camera_group:
+    entities:
       - camera.back_yard
+  left_side_camera_group:
+    entities:
       - camera.left_side
+  right_side_camera_group:
+    entities:
       - camera.right_side
+
+camera:
+  - platform: generic
+    name: 'Driveway'
+    still_image_url: !secret driveway_camera_snapshot_url
+  - platform: generic
+    name: 'Left Side'
+    still_image_url: !secret left_side_camera_snapshot_url
+  - platform: generic
+    name: 'Back Yard'
+    still_image_url: !secret back_yard_camera_snapshot_url
+  - platform: generic
+    name: 'Right Side'
+    still_image_url: !secret right_side_camera_snapshot_url
+  - platform: generic
+    name: Front Door
+    still_image_url: !secret front_door_camera_snapshot_url

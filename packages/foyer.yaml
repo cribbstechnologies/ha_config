@@ -98,8 +98,3 @@ binary_sensor:
     value_template: '{{value_json.motion}}'
     payload_on: 'motion detected'
     payload_off: 'standby'
-
-camera:
-  - platform: generic
-    name: Front Door
-    still_image_url: !secret front_door_camera_snapshot_url

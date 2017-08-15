@@ -47,8 +47,8 @@ media_player:
       video1: 'Roku'
       cd: 'TV'
       game: 'Alexa'
-  - platform: roku
-    host: !secret living_room_roku_host
+  # - platform: roku
+  #   host: !secret living_room_roku_host
 
 light:
   - platform: template

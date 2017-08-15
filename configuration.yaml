@@ -86,6 +86,8 @@ emulated_hue:
 media_player:
   - platform: roku
     host: !secret bedroom_roku_host
-  - platform: plex
+  # - platform: plex
   - platform: cast
     host: !secret downstairs_google_home_host
+
+alexa:

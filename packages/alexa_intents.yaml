@@ -1,114 +1,127 @@
-alexa:
-  intents:
-    WhatCanAlexaControl:
-      speech:
-        type: plaintext
-        text: >
-          {%- if domain and domain.lower() == 'light' or domain.lower() == 'lights' -%}
-            The lights I can control are:
-            {% for state in states.light %}
-                {% if state.attributes.emulated_hue %}
-                {% if state.attributes.emulated_hue_name %}
-                  {{state.attributes.emulated_hue_name}}
-                {% else %}
-                  {{state.attributes.friendly_name}} 
-                {% endif %}
+intent_script:
+  amzn1.ask.skill.a7f0447a-ff9c-49a1-8385-08f3f23cfe92:
+    speech:
+      type: ssml
+      text: >
+        <speak>
+          Pause.
+          <audio src="https://hass.cribbstechnologies.com/local/smb_pause.mp3"/>
+        </speak>
+  AutomationWalkthrough:
+    speech:
+      text: >
+        {%- if not Topic is defined %}
+          Hello! I'm the Home Assistant. I control various items around the house.
+          Which topic would you like more information about? I can provide more information on
+          Kitchen
+          Dining Room
+          Living Room
+          Foyer
+          Master Bedroom
+        {% endif %}
+  WhatCanAlexaControl:
+    speech:
+      text: >
+        {%- if domain and domain.lower() == 'light' or domain.lower() == 'lights' -%}
+          The lights I can control are:
+          {% for state in states.light %}
+              {% if state.attributes.emulated_hue %}
+              {% if state.attributes.emulated_hue_name %}
+                {{state.attributes.emulated_hue_name}}
+              {% else %}
+                {{state.attributes.friendly_name}} 
               {% endif %}
-            {%endfor%}
-          {% elif domain and domain.lower() == 'switches' or domain.lower() == 'switch' %}
-            The switches I can control are:
-            {% for state in states.switch %}
-                {% if state.attributes.emulated_hue %}
-                {% if state.attributes.emulated_hue_name %}
-                  {{state.attributes.emulated_hue_name}}
-                {% else %}
-                  {{state.attributes.friendly_name}} 
-                {% endif %}
+            {% endif %}
+          {%endfor%}
+        {% elif domain and domain.lower() == 'switches' or domain.lower() == 'switch' %}
+          The switches I can control are:
+          {% for state in states.switch %}
+              {% if state.attributes.emulated_hue %}
+              {% if state.attributes.emulated_hue_name %}
+                {{state.attributes.emulated_hue_name}}
+              {% else %}
+                {{state.attributes.friendly_name}} 
               {% endif %}
-            {%endfor%}
-          {% else %}
-            I've got no clue what {{domain}} is
-          {%- endif -%}
-    IntroductionIntent:
-      speech:
-        type: plaintext
-        text: >
-          Hello! I'm Alexa. I can control various things around this house.
-          For example, I can turn on the kitchen lights.
-          Give it a shot. Say "Alexa, turn the kitchen light on".
-          There are also various buttons around the house. 
-          To find out what they control just say 
-          "Alexa, ask the house about the (read the label) button".
-          Things can also be controlled by the tablet near the garage door.
-          Pressing the picture of the item you would like to control will toggle it.
-          You can press the video cameras to get a still picture of what that camera sees.
-    DashButtonIntent:
-      speech:
-        type: plaintext
-        text: >
-          {%- if button_name.lower() == 'milkbone' or button_name.lower() == 'milk bone' -%}
-            This button controls the irrigation system in the back yard. 
-            It's meant to be used after the dogs come in from using the bathroom to dilute the urine so the grass doesn't burn.
-          {%- elif button_name.lower() == 'starbucks doubleshot' -%}
-            This button helps start the day. It turns on the lights in the back yard, and a few lights downstairs to help get the dogs outside.
-          {%- elif button_name.lower() == 'on' -%}
-            This button turns off all of the lights in the house that aren't associated with automations.
-          {%- else -%}
-            I don't know about the {{button_name}} button
-          {%- endif -%}
-      # card:
-      #   type: simple
-      #   title: Asked {{button_name}}
-      #   content: Tell users what to do when {{button_name}} pressed
-    WhereAreWeIntent:
-      speech:
-        type: plaintext
-        text: >
-          {%- if is_state('device_tracker.brian', 'home') and
-                 is_state('device_tracker.christina', 'home') -%}
-            You are both home, you silly
-          {%- else -%}
-            Christina is at {{ states("device_tracker.christina") }}
-            and Brian is at {{ states("device_tracker.brian") }}
-          {% endif %}
+            {% endif %}
+          {%endfor%}
+        {% else %}
+          I've got no clue what {{domain}} is
+        {%- endif -%}
+  IntroductionIntent:
+    speech:
+      type: plaintext
+      text: >
+        Hello! I'm Alexa. I can control various things around this house.
+        For example, I can turn on the kitchen lights.
+        Give it a shot. Say "Alexa, turn the kitchen light on".
+        There are also various buttons around the house. 
+        To find out what they control just say 
+        "Alexa, ask the house about the (read the label) button".
+        Things can also be controlled by the tablet near the garage door.
+        Pressing the picture of the item you would like to control will toggle it.
+        You can press the video cameras to get a still picture of what that camera sees.
+  DashButtonIntent:
+    speech:
+      text: >
+        {%- if button_name.lower() == 'milkbone' or button_name.lower() == 'milk bone' -%}
+          This button controls the irrigation system in the back yard. 
+          It's meant to be used after the dogs come in from using the bathroom to dilute the urine so the grass doesn't burn.
+        {%- elif button_name.lower() == 'starbucks doubleshot' -%}
+          This button helps start the day. It turns on the lights in the back yard, and a few lights downstairs to help get the dogs outside.
+        {%- elif button_name.lower() == 'on' -%}
+          This button turns off all of the lights in the house that aren't associated with automations.
+        {%- else -%}
+          I don't know about the {{button_name}} button
+        {%- endif -%}
+    # card:
+    #   type: simple
+    #   title: Asked {{button_name}}
+    #   content: Tell users what to do when {{button_name}} pressed
+  WhereAreWeIntent:
+    speech:
+      text: >
+        {%- if is_state('device_tracker.brian', 'home') and
+                is_state('device_tracker.christina', 'home') -%}
+          You are both home, you silly
+        {%- else -%}
+          Christina is at {{ states("device_tracker.christina") }}
+          and Brian is at {{ states("device_tracker.brian") }}
+        {% endif %}
 
-    LocateIntent:
-      action:
-        service: notify.notify
-        data_template:
-          message: The location of {{ User }} has been queried via Alexa.
-      speech:
-        type: plaintext
-        text: >
-          {%- for state in states.device_tracker -%}
-            {%- if state.name.lower() == User.lower() -%}
-              {{ state.name }} is at {{ state.state }}
-            {%- elif loop.last -%}
-              I am sorry, I do not know where {{ User }} is.
-            {%- endif -%}
-          {%- else -%}
-            Sorry, I don't have any trackers registered.
-          {%- endfor -%}
-    LEDIntent:
-      speech:
-        type: plaintext 
-        text: >
-          {%- if is_state('switch.counter_lights', 'on') and 
-            is_state('light.overcabinet_lights', 'on') -%}
-            All of the LED strips are on
-          {%- elif is_state('switch.counter_lights', 'on') -%}
-            The counter lights are on
-          {%- elif is_state('light.overcabinet_lights', 'on') -%}
-            The over cabinet lights are on
-          {%- else -%}
-            No Lights are on
+  LocateIntent:
+    action:
+      service: notify.notify
+      data_template:
+        message: The location of {{ User }} has been queried via Alexa.
+    speech:
+      text: >
+        {%- for state in states.device_tracker -%}
+          {%- if state.name.lower() == User.lower() -%}
+            {{ state.name }} is at {{ state.state }}
+          {%- elif loop.last -%}
+            I am sorry, I do not know where {{ User }} is.
           {%- endif -%}
-    MediaPlayerSourceIntent:
-      action:
-        service: media_player.select_source
-        data_template:
-          entity_id: 'media_player.{{player|replace(" ", "_")|lower}}'
-          source: '{{source}}'
-      speech:
-        type: plaintext
-        text: 'OK. Changing {{player}} to {{source}}'
+        {%- else -%}
+          Sorry, I don't have any trackers registered.
+        {%- endfor -%}
+  LEDIntent:
+    speech:
+      text: >
+        {%- if is_state('switch.counter_lights', 'on') and 
+          is_state('light.overcabinet_lights', 'on') -%}
+          All of the LED strips are on
+        {%- elif is_state('switch.counter_lights', 'on') -%}
+          The counter lights are on
+        {%- elif is_state('light.overcabinet_lights', 'on') -%}
+          The over cabinet lights are on
+        {%- else -%}
+          No Lights are on
+        {%- endif -%}
+  MediaPlayerSourceIntent:
+    action:
+      service: media_player.select_source
+      data_template:
+        entity_id: 'media_player.{{player|replace(" ", "_")|lower}}'
+        source: '{{source}}'
+    speech:
+      text: 'OK. Changing {{player}} to {{source}}'

@@ -21,11 +21,3 @@ group:
     entities:
     - switch.deck_wall_light_switch
     - switch.back_yard_flood_lights_switch
-
-camera:
-  - platform: generic
-    name: 'Back Yard'
-    still_image_url: !secret back_yard_camera_snapshot_url
-  - platform: generic
-    name: 'Right Side'
-    still_image_url: !secret right_side_camera_snapshot_url

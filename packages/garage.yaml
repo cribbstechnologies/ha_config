@@ -16,14 +16,6 @@ group:
     name: Garage
     icon: mdi:car
 
-camera:
-  - platform: generic
-    name: 'Driveway'
-    still_image_url: !secret driveway_camera_snapshot_url
-  - platform: generic
-    name: 'Left Side'
-    still_image_url: !secret left_side_camera_snapshot_url
-
 automation:
   - id: front_floods_on_dusk
     alias: Front Floods On Dusk
