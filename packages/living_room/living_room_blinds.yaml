@@ -1,0 +1,94 @@
+homeassistant:
+  customize:
+    cover.living_room:
+      haaska_hidden: false
+      haaska_name: Living Room Blinds
+
+cover:
+  - platform: mqtt
+    name: "Living Room"
+    tilt_command_topic: !secret living_room_blinds_tilt_command_topic
+    tilt_status_topic: !secret living_room_blinds_tilt_status_topic
+    tilt_closed_value: 180
+    tilt_opened_value: 80
+    device_class: 'window'
+    tilt_max: 180
+    tilt_min: 80
+    tilt_invert_state: True
+
+switch:
+  - platform: template
+    switches:
+      living_room_blinds:
+        value_template: "{{states.cover.living_room.attributes.current_tilt_position != unknown and states.cover.living_room.attributes.current_tilt_position >= 100}}"
+        turn_on:
+          service: cover.open_cover_tilt
+          entity_id: cover.living_room
+        turn_off:
+          service: cover.close_cover_tilt
+          entity_id: cover.living_room
+
+script:
+  toggle_living_room_blinds:
+    alias: Toggle Living Room Blinds
+    sequence:
+      - service: script.open_living_room_blinds
+      - service: script.close_living_room_blinds
+  open_living_room_blinds:
+    alias: Open Living Room Blinds
+    sequence: 
+      - condition: template
+        value_template: '{{is_state_attr("cover.living_room", "current_tilt_position", 0) and is_state("input_boolean.blinds_toggling", "off")}}'
+      - service: homeassistant.turn_on
+        entity_id: input_boolean.blinds_toggling
+      - service: cover.open_cover_tilt
+        entity_id: cover.living_room
+  close_living_room_blinds:
+    alias: Close Living Room Blinds
+    sequence: 
+      - condition: template
+        value_template: '{{not is_state_attr("cover.living_room", "current_tilt_position", 0) and is_state("input_boolean.blinds_toggling", "off")}}'
+      - service: homeassistant.turn_on
+        entity_id: input_boolean.blinds_toggling
+      - service: cover.close_cover_tilt
+        entity_id: cover.living_room
+
+input_boolean:
+  blinds_toggling:
+    initial: off
+
+automation:
+  - id: blinds_toggle_reset
+    alias: Reset Blinds Toggle Boolean
+    initial_state: true
+    trigger:
+      platform: state
+      entity_id: input_boolean.blinds_toggling
+      from: 'off'
+      to: 'on'
+      for:
+        seconds: 30
+    action:
+      service: homeassistant.turn_off
+      entity_id: input_boolean.blinds_toggling
+  - id: blinds_open_am
+    alias: Blinds open after sunrise
+    initial_state: True
+    trigger:
+      platform: sun
+      event: sunrise
+      offset: '00:45:00'
+    action:
+      service: cover.open_cover_tilt
+      entity_id: cover.living_room
+  - id: blinds_close_pm
+    alias: Blinds close in afternoon
+    initial_state: True
+    trigger:
+      platform: numeric_state
+      entity_id: sun.sun
+      value_template: '{{state.attributes.elevation}}'
+      below: 57
+    action:
+      service: cover.close_cover_tilt
+      entity_id: cover.living_room

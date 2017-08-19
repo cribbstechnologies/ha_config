@@ -37,7 +37,7 @@
   action:
     service: script.welcome_home
     data_template:
-      user: '{{trigger.state.friendly_name}}'
+      user: '{{trigger.state.attributes.friendly_name}}'
 - id: dont_burn_the_house_down
   alias: "Don't burn the house down"
   initial_state: True

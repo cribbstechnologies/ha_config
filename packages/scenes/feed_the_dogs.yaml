@@ -1,22 +1,30 @@
 homeassistant:
   customize:
-    scene.dog_food_time:
+    scene.dog_food_lights:
+      emulated_hue: False
+      emulated_hue_name: 'Dog Food Lights'
+    script.dog_food_timer:
       emulated_hue: True
-      emulated_hue_name: 'Dog Food Time'
+      emulated_hue_name: 'Dog Food Timer'
 
 scene:
-  - name: "Dog Food Time"
+  - name: "Dog Food Lights"
     entities:
       switch.upstairs_hall_switch: on
+      switch.downstairs_hall_switch: on
       light.master_bed_light_level:
         state: on
         brightness: 255
       input_boolean.feeding_time_active: on
+  
 
 input_boolean:
   feeding_time_active:
     initial: off
     name: Dog Feeding Time
+  dog_food_cooking:
+    initial: off
+    name: Dog Food Cooking
 
 automation:
   - id: downstairs_off_delay_dog_feeding
@@ -29,7 +37,18 @@ automation:
       for:
         minutes: 2
     action:
-      service: script.downstairs_off_feeding_time_reset        
+      service: script.downstairs_off_feeding_time_reset
+  - id: dog_food_timer_up
+    initial_state: True
+    trigger:
+      platform: state
+      entity_id: input_boolean.dog_food_cooking
+      from: 'off'
+      to: 'on'
+      for:
+        minutes: 2
+    action:
+      service: script.dog_food_timer_up  
         
 
 script:
@@ -39,3 +58,21 @@ script:
         entity_id: script.downstairs_off
       - service: homeassistant.turn_off
         entity_id: input_boolean.feeding_time_active
+  dog_food_timer:
+    sequence:
+      - service: tts.google_say
+        data:
+          entity_id: media_player.downstairs_home
+          message: "Setting dog food timer for 15 minutes."
+      - service: homeassistant.turn_on
+        entity_id: input_boolean.dog_food_cooking
+  dog_food_timer_up:
+    sequence:
+      - service: tts.google_say
+        data:
+          entity_id: media_player.downstairs_home
+          message: "It's time to feed the dogs"
+      - service: homeassistant.turn_off
+        entity_id: input_boolean.dog_food_cooking
+      - service: homeassistant.turn_on
+        entity_id: scene.dog_food_lights
