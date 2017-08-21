@@ -103,8 +103,10 @@ script:
           device: 0
           command: 'ON'
       - alias: Turn receiver On
-        service: media_player.turn_on
-        entity_id: media_player.receiver
+        service: media_player.select_source
+        data:
+          entity_id: media_player.receiver
+          source: video1
       - delay:
           seconds: 8
       - alias: Switch to HDMI2
@@ -113,11 +115,6 @@ script:
           entity_id: remote.tv
           device: 0
           command: 'HDMI2'
-      - alias: Switch receiver to STB/DVR
-        service: media_player.select_source
-        data:
-          entity_id: media_player.receiver
-          source: video1
   all_off:
     alias: All Off
     sequence:

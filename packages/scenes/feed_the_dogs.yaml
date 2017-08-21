@@ -46,7 +46,7 @@ automation:
       from: 'off'
       to: 'on'
       for:
-        minutes: 2
+        minutes: 15
     action:
       service: script.dog_food_timer_up  
         

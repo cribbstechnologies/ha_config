@@ -4,6 +4,11 @@ homeassistant:
       friendly_name: 'Garage Light'
     switch.driveway_flood_lights_switch:
       friendly_name: 'Driveway Flood Lights'
+    lock.garage_door_locked:
+      friendly_name: 'Lock Status'
+      emulated_hue: true
+    sensor.garage_door_lock_battery:
+      friendly_name: Battery Level
 
 group:
   garage:
@@ -12,9 +17,22 @@ group:
     - camera.driveway
     - switch.garage_light_switch
     - switch.driveway_flood_lights_switch
+    - group.garage_door_lock
     view: true
     name: Garage
     icon: mdi:car
+  garage_door_lock:
+    name: Garage Door Lock
+    entities:
+      - lock.garage_door_locked
+      - sensor.garage_door_lock_battery
+      - sensor.garage_door_access_control
+      - sensor.garage_door_alarm_level
+      - sensor.garage_door_alarm_type
+      - sensor.garage_door_burglar
+      - sensor.garage_door_power_management
+      - sensor.garage_door_sourcenodeid
+      - sensor.garage_door_system
 
 automation:
   - id: front_floods_on_dusk
