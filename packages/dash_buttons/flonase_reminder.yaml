@@ -1,0 +1,37 @@
+input_boolean:
+  flonase_taken:
+    initial: off
+    name: Take Your Flonase
+
+automation:
+  - id: flonase_reminder
+    initial_state: True
+    trigger:
+      - platform: time
+        minutes: '/30'
+        seconds: 00
+    condition:
+      - condition: time
+        after: '08:00:00'
+        before: '13:00:00'
+      - condition: state
+        entity_id: input_boolean.flonase_taken
+        state: 'on'
+      - condition: state
+        entity_id: device_tracker.brian
+        state: 'home'
+    action:
+      - service: media_player.turn_on
+        entity_id: media_player.downstairs_home
+      - service: tts.amazon_polly_say
+        data:
+          entity_id: media_player.downstairs_home
+          message: "Don't forget to take your Flonase."
+  - id: flonase_reset
+    initial_state: True
+    trigger:
+      - platform: time
+        at: '00:00:00'
+    action:
+      - service: home-assistant.turn_off
+        entity_id: input_boolean.flonase_taken

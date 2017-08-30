@@ -60,15 +60,32 @@ script:
         entity_id: input_boolean.feeding_time_active
   dog_food_timer:
     sequence:
-      - service: tts.google_say
+      - service: media_player.turn_on
+        entity_id: media_player.downstairs_home
+      - service: tts.amazon_polly_say
         data:
           entity_id: media_player.downstairs_home
           message: "Setting dog food timer for 15 minutes."
+      - delay: 10
+      - service: script.piper_allergy_shot
       - service: homeassistant.turn_on
         entity_id: input_boolean.dog_food_cooking
+  piper_allergy_shot:
+    sequence:
+      - condition: template
+        value_template: "{{is_state('calendar.pipers_allergy_shots', 'on')}}"
+      - condition: time
+        after: '17:00:00'
+        before: '00:00:00'
+      - service: tts.amazon_polly_say
+        data:
+          entity_id: media_player.downstairs_home
+          message: "Don't forget to give Piper her allergy shot."
   dog_food_timer_up:
     sequence:
-      - service: tts.google_say
+      - service: media_player.turn_on
+        entity_id: media_player.downstairs_home
+      - service: tts.amazon_polly_say
         data:
           entity_id: media_player.downstairs_home
           message: "It's time to feed the dogs"

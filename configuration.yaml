@@ -65,7 +65,11 @@ sensor:
 
 # Text to speech
 tts:
-  platform: google
+  platform: amazon_polly
+  aws_access_key_id: !secret polly_access_key
+  aws_secret_access_key: !secret polly_secret
+  region_name: 'us-east-1'
+  text_type: text 
 
 group: !include groups.yaml
 automation: !include automations.yaml
