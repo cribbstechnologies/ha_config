@@ -20,7 +20,7 @@ switch:
   - platform: template
     switches:
       living_room_blinds:
-        value_template: "{{states.cover.living_room.attributes.current_tilt_position != unknown and states.cover.living_room.attributes.current_tilt_position >= 100}}"
+        value_template: "{{states.cover.living_room != None and states.cover.living_room.attributes.current_tilt_position != 'unknown' and states.cover.living_room.attributes.current_tilt_position >= 100}}"
         turn_on:
           service: cover.open_cover_tilt
           entity_id: cover.living_room

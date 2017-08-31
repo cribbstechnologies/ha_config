@@ -88,7 +88,12 @@ sensor:
   - platform: template
     sensors:
       front_door_lock_battery:
-        value_template: '{{states.zwave.front_door.attributes.battery_level}}'
+        value_template: >
+          {%- if is_state('zwave.front_door', 'Ready') -%}
+            {{states.zwave.front_door.attributes.battery_level}}
+          {%- else -%}
+            -
+          {%- endif -%}
         unit_of_measurement: '%'
 
 binary_sensor:

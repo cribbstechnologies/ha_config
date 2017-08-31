@@ -5,6 +5,7 @@ input_boolean:
 
 automation:
   - id: flonase_reminder
+    alias: Flonase Reminder
     initial_state: True
     trigger:
       - platform: time
@@ -16,7 +17,7 @@ automation:
         before: '13:00:00'
       - condition: state
         entity_id: input_boolean.flonase_taken
-        state: 'on'
+        state: 'off'
       - condition: state
         entity_id: device_tracker.brian
         state: 'home'
@@ -28,10 +29,11 @@ automation:
           entity_id: media_player.downstairs_home
           message: "Don't forget to take your Flonase."
   - id: flonase_reset
+    alias: Flonase Reset
     initial_state: True
     trigger:
       - platform: time
         at: '00:00:00'
     action:
-      - service: home-assistant.turn_off
+      - service: home_assistant.turn_off
         entity_id: input_boolean.flonase_taken
