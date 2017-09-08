@@ -1,0 +1,32 @@
+automation:
+  - id: welcome_home
+    alias: Welcome Home
+    initial_state: True
+    trigger:
+      - platform: state
+        entity_id: device_tracker.brian
+        from: 'not_home'
+        to: 'home'
+        for:
+          minutes: 2
+      - platform: state
+        entity_id: device_tracker.christina
+        from: 'not_home'
+        to: 'home'
+        for:
+          minutes: 2
+    action:
+      service: script.welcome_home
+      data_template:
+        user: '{{trigger.to_state.attributes.friendly_name}}'
+  - id: dont_burn_the_house_down
+    alias: "Don't burn the house down"
+    initial_state: True
+    trigger:
+      platform: state
+      entity_id: device_tracker.christina
+      from: 'home'
+      to: 'not_home'
+    action:
+      service: switch.turn_off
+      entity_id: switch.bathroom_outlet

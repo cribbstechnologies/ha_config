@@ -1,0 +1,14 @@
+script:
+  speak_it:
+    sequence:
+      - service: tts.amazon_polly_say
+        entity_id: media_player.downstairs_home
+        data_template:
+          message: >
+            {%- if not ssml -%}
+              <speak>
+                {{message}}
+              </speak>
+            {%- else -%}
+              {{ssml}}
+            {%- endif -%}
