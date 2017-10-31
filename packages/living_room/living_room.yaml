@@ -130,7 +130,6 @@ script:
     sequence:
       - service: media_player.turn_on
         entity_id: media_player.downstairs_home
-      - service: tts.amazon_polly_say
+      - service: script.speak_it
         data_template:
-          entity_id: media_player.downstairs_home
           message: "Welcome home {{user}}."

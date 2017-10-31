@@ -85,10 +85,11 @@ automation:
     alias: Blinds close in afternoon
     initial_state: True
     trigger:
-      platform: numeric_state
-      entity_id: sun.sun
-      value_template: '{{state.attributes.elevation}}'
-      below: 57
+      platform: template
+      value_template: '{{states.sun.sun.attributes.azimuth > 200}}'
+    condition: 
+      condition: time
+      after: '14:00:00'
     action:
       service: cover.close_cover_tilt
       entity_id: cover.living_room

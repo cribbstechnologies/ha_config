@@ -12,3 +12,4 @@ plex.conf
 *.sqlite
 *.txt
 *.swp
+*.token

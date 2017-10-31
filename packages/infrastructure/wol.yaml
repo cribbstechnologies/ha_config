@@ -1,0 +1,4 @@
+switch:
+  - platform: wake_on_lan
+    mac_address: !secret synology_wol
+    name: Synology NAS

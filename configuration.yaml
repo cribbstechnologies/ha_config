@@ -16,11 +16,10 @@ homeassistant:
 # Show links to resources in log and frontend
 #introduction:
 
-# Enables the frontend
-#frontend:
-
 # Enables configuration UI
 config:
+
+apcupsd:
 
 panel_custom:
   - name: floorplan
@@ -69,7 +68,7 @@ tts:
   aws_access_key_id: !secret polly_access_key
   aws_secret_access_key: !secret polly_secret
   region_name: 'us-east-1'
-  text_type: text 
+  text_type: ssml
 
 group: !include groups.yaml
 automation: !include automations.yaml

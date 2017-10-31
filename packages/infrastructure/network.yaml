@@ -5,3 +5,4 @@ group:
     view: true
     entities:
       - group.pi_hole
+      - group.rack_ups

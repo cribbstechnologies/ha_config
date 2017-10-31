@@ -1,0 +1,50 @@
+homeassistant:
+  customize:
+    sensor.launch_window:
+      friendly_name: Next Launch Window Timestamp
+
+sensor:
+  - platform: rest
+    resource: https://launchlibrary.net/1.2.2/launch/next/10
+    name: launch window
+    # if the current timestamp is in the launch window
+    # this sensor will return the UTC timestamp of the launch
+    value_template: >-
+      {% set launch_window = None %}
+      {%- for launch in value_json.launches %}
+        {% if launch.location.id == 16 %} 
+          # location id 16 is Florida other locations can be found via the api
+          # https://launchlibrary.net/1.2/location
+           {% if launch.wsstamp <= as_timestamp(now()) <= launch.westamp %}
+              {% set launch_window = launch.wsstamp %}
+           {% endif %}
+        {% endif %}
+      {% endfor %}
+      {{launch_window}}
+
+automation:
+  - id: launch_window_approaching
+    alias: Launch Window Approaching
+    trigger:
+      - platform: state
+        entity_id: sensor.launch_window
+    action:
+      - wait_template: >-
+          # this is kinda crappy but I couldn't figure out another way to do it
+          # the timestamp isn't reported in relation to UTC so I had to do the offset by hand
+          # positive offsets will need to change this split as well as the operator in this first section of the if block
+          {% set offset_seconds = now().strftime('%z').split('-')[1] | int /100 | round * 60 *60 %}
+          # # set off the alert 15 minutes early
+          {% set early_warning_offset = 15*60 %}
+          {%- if (as_timestamp(now()) + offset_seconds) >= (sensor.launch_window - early_warning_offset) -%}
+            True
+          {%- else -%}
+            False
+          {%- endif -%}
+      - service: script.launch_alert
+
+script:
+  launch_alert:
+    sequence:
+      - service: switch.turn_on
+        entity_id: switch.office_light_switch

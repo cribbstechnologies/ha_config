@@ -21,3 +21,35 @@ group:
     entities:
     - switch.deck_wall_light_switch
     - switch.back_yard_flood_lights_switch
+
+light:
+  - platform: mqtt_json
+    name: Deck Stair Light
+    command_topic: !secret deck_stair_lights_state_topic
+    state_topic: !secret deck_stair_lights_command_topic
+    effect: true
+    effect_list:
+      - 'solid'
+      - 'bpm'
+      - 'candy cane'
+      - 'confetti'
+      - 'cyclon rainbow'
+      - 'dots'
+      - 'fire'
+      - 'glitter'
+      - 'juggle'
+      - 'lightning'
+      - 'police all'
+      - 'police one'
+      - 'rainbow'
+      - 'glitter'
+      - 'rainbow with glitter'
+      - 'sinelon'
+      - 'twinkle'
+      - 'noise'
+      - 'ripple'
+    brightness: true
+    color_temp: true
+    flash: true
+    rgb: true
+    retain: true

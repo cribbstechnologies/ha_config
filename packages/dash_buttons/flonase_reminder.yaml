@@ -22,11 +22,8 @@ automation:
         entity_id: device_tracker.brian
         state: 'home'
     action:
-      - service: media_player.turn_on
-        entity_id: media_player.downstairs_home
-      - service: tts.amazon_polly_say
+      - service: script.speak_it
         data:
-          entity_id: media_player.downstairs_home
           message: "Don't forget to take your Flonase."
   - id: flonase_reset
     alias: Flonase Reset
@@ -35,5 +32,5 @@ automation:
       - platform: time
         at: '00:00:00'
     action:
-      - service: home_assistant.turn_off
+      - service: homeassistant.turn_off
         entity_id: input_boolean.flonase_taken
