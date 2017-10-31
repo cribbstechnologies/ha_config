@@ -36,7 +36,7 @@ automation:
           {% set offset_seconds = now().strftime('%z').split('-')[1] | int /100 | round * 60 *60 %}
           # # set off the alert 15 minutes early
           {% set early_warning_offset = 15*60 %}
-          {%- if (as_timestamp(now()) + offset_seconds) >= (sensor.launch_window - early_warning_offset) -%}
+          {%- if states.sensor.launch_window is not None and (as_timestamp(now()) + offset_seconds) >= (states.sensor.launch_window - early_warning_offset) -%}
             True
           {%- else -%}
             False
