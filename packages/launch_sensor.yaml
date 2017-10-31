@@ -15,7 +15,7 @@ sensor:
         {% if launch.location.id == 16 %} 
           # location id 16 is Florida other locations can be found via the api
           # https://launchlibrary.net/1.2/location
-           {% if launch.wsstamp <= as_timestamp(now()) <= launch.westamp %}
+           {% if strptime(isostart, '%Y%m%dT%H%M%SZ').strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
               {% set launch_window = launch.wsstamp %}
            {% endif %}
         {% endif %}
