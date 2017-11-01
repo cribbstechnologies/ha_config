@@ -10,17 +10,15 @@ sensor:
     # if the current timestamp is in the launch window
     # this sensor will return the UTC timestamp of the launch
     value_template: >-
-      {% set launch_window = None %}
       {%- for launch in value_json.launches %}
         {% if launch.location.id == 16 %} 
           # location id 16 is Florida other locations can be found via the api
           # https://launchlibrary.net/1.2/location
            {% if strptime(isostart, '%Y%m%dT%H%M%SZ').strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
-              {% set launch_window = launch.wsstamp %}
+              {{ launch.wsstamp }}
            {% endif %}
         {% endif %}
       {% endfor %}
-      {{launch_window}}
 
 automation:
   - id: launch_window_approaching
@@ -29,6 +27,13 @@ automation:
       - platform: state
         entity_id: sensor.launch_window
     action:
+      - service: script.launch_alert
+
+script:
+  launch_alert:
+    sequence:
+      - condition: template
+        value_template: "{{not is_state('sensor.launch_window', '')}}"
       - wait_template: >-
           # this is kinda crappy but I couldn't figure out another way to do it
           # the timestamp isn't reported in relation to UTC so I had to do the offset by hand
@@ -41,10 +46,5 @@ automation:
           {%- else -%}
             False
           {%- endif -%}
-      - service: script.launch_alert
-
-script:
-  launch_alert:
-    sequence:
       - service: switch.turn_on
         entity_id: switch.office_light_switch
