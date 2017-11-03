@@ -1,12 +1,24 @@
+###########################
+## Thanks for checkin out my package ;)
+## inspired by Carlo
+## https://github.com/CCOSTAN/Home-AssistantConfig#-home-assistant-config-by-ccostan
+## http://www.vmwareinfo.com/search/label/iot
+##
+## This package uses the launchlibrary.net API to determine if there will be a launch today
+## Currently it uses the Florida location
+## Other locations can be found here: https://launchlibrary.net/1.2/location
+## Whatever you'd like to happen can be customized inside the script at the bottom of the package
+############################
 homeassistant:
   customize:
     sensor.launch_window:
       friendly_name: Next Launch Window Timestamp
-      scan_interval: 10
+      scan_interval: 30
 
 sensor:
   - platform: rest
-    resource: https://launchlibrary.net/1.2.2/launch/next/10
+    # resource: https://launchlibrary.net/1.2.2/launch/next/10
+    resource: https://raw.githubusercontent.com/cribbstechnologies/ha_config/master/www/test_launch.json
     name: launch window
     # if the current timestamp is in the launch window
     # this sensor will return the UTC timestamp of the launch
@@ -23,9 +35,9 @@ sensor:
             {% set utc_offset_seconds = (utc_offset_hours| int /100) * 60 * 60 %}
 
             {% if utc_offset_direction == '-' %}
-             {{ launch.wsstamp + utc_offset_seconds}}
+             {{ launch.wsstamp - utc_offset_seconds}}
             {% else %}
-              {{ launch.wsstamp - utc_offset_seconds}}
+              {{ launch.wsstamp + utc_offset_seconds}}
             {% endif %}
           {% endif %}
         {% endif %}
@@ -37,15 +49,24 @@ automation:
     trigger:
       - platform: state
         entity_id: sensor.launch_window
+    condition:
+        condition: and
+        conditions:
+          - condition: template
+            value_template: "{{states('sensor.launch_window') != 'unknown'}}"
+          - condition: template
+            value_template: "{{as_timestamp(now()) < (states('sensor.launch_window') | float)}}"
+      
     action:
-      - service: script.launch_alert
-
-script:
-  launch_alert:
-    sequence:
-      - condition: template
-        value_template: "{{not is_state('sensor.launch_window', '')}}"
-      - wait_template: >-
-          {{now() >= sensor.launch_window}}
+      #this stuff is what happens before the launch window    
+      - service: switch.turn_off
+        entity_id: switch.kitchen_entry_switch
+      - delay: '00:00:05'
       - service: switch.turn_on
-        entity_id: switch.office_light_switch
+        entity_id: switch.kitchen_entry_switch
+      #this tells it to wait until the launch window has started
+      - wait_template: >-
+          {{as_timestamp(now()) >= (states('sensor.launch_window') | float)}}
+      #this happens at the start of the launch window
+      - service: switch.turn_on
+        entity_id: switch.kitchen_light_switch
